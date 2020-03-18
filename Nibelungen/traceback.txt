@@ -1,0 +1,26 @@
+﻿I'm sorry, but an uncaught exception occurred.
+
+While running game code:
+  File "game/script.rpy", line 43, in script call
+    call Battle
+  File "game/script.rpy", line 43, in script call
+    call Battle
+ScriptError: could not find label 'Battle'.
+
+-- Full Traceback ------------------------------------------------------------
+
+Full traceback:
+  File "game/script.rpy", line 43, in script call
+    call Battle
+  File "D:\Renpy\renpy\ast.py", line 1436, in execute
+    rv = renpy.game.context().call(label, return_site=self.next.name)
+  File "game/script.rpy", line 43, in script call
+    call Battle
+  File "D:\Renpy\renpy\script.py", line 898, in lookup
+    raise ScriptError("could not find label '%s'." % str(original))
+ScriptError: could not find label 'Battle'.
+
+Windows-8-6.2.9200
+Ren'Py 7.3.5.606
+Nibelungen 1.0
+Wed Mar 18 09:27:59 2020

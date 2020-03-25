@@ -1,10 +1,40 @@
 ﻿# The script of the game goes in this file.
 
+#Init
+init:
+    $ timer_range = 0
+    $ timer_jump = 0
+
 # Declare characters used by this game. The color argument colorizes the
 # name of the character.
-
+#define mc = Character("Main Character", 5, 604, 210, 504, 359, 419, 279, [slash], [], 0, 0)
 define mc = Character("Main Character")
 define wb = Character("World Builder")
+image cave start = im.Scale("new_cave.jpg", 1920, 1080)
+
+screen countdown:
+    timer 0.01 repeat True action If(time > 0, true=SetVariable('time', time - 0.01), false=[Hide('countdown'), Jump(timer_jump)])
+
+default timeout = 5.0
+default timeout_label = None
+default persistent.timed_choices = True
+
+screen choice(items):
+  style_prefix "choice"
+
+  vbox:
+    for i in items:
+      textbutton i.caption action i.action
+
+    if (timeout_label is not None) and persistent.timed_choices:
+
+      bar:
+        xalign 0.5
+        ypos 400
+        xsize 740
+        value AnimatedValue(old_value=0.0, value=1.0, range=1.0, delay=timeout)
+
+      timer timeout action Jump(timeout_label)
 
 # The game starts here.
 
@@ -14,7 +44,7 @@ label start:
     # add a file (named either "bg room.png" or "bg room.jpg") to the
     # images directory to show it.
 
-    scene bg room
+    scene cave start
 
     # This shows a character sprite. A placeholder is used, but you can
     # replace it by adding a file named "eileen happy.png" to the images
@@ -49,40 +79,60 @@ label start:
     wb "The Goblin yells and gets up immediately"
     wb "He spreads his sword towards you."
     wb "There is no other option, he wants to stab you to death"
+    
+    label attack:
 
-    menu:
-     "what do you do?"
+      #set the label that is jumped to if the player doesn't make a decision
+      $ timeout_label = "dead"
+    
+    menu:    
+      "Rush towards him and disarm the Goblin":   
+        jump knight                      
 
-     "Rush towards him and disarm the Goblin":
-        image Knight MC = "Main_Ritter.png"
-        show Knight MC at left
-        wb"You rush towards the Goblin. "
-        wb"The surprised Goblin swings his Sword after you. "
-        
-        wb"But you react fast and evade it. "
-        wb"You hit the Sword out of his Hand and then kick him in the chest. "
-        wb"He Stumbles. Which gives you enough Time to get his Sword from the Ground."
-        
-        wb"You attack him immediately and stab into his chest. "
-        wb"He cries in Agony while you press him to the ground. "
-        wb"It becomes quiet. You apply some more pressure just to be sure and then pull the               
-        sword out "
-        wb"Blood flows down the sword and you shortly clean it on the Goblins leather clothes. "
-        wb"You look at the Sword, its not exactly new but still in good Condition." 
-        wb"There is no scabbard but it should do just fine."
+      "Conjure a Spell":
+        jump mage
+            
+   
+    label knight:
+      image Knight MC = "Main_Ritter.png"
+            #define knightmc = Character("Main Character", 5, 604, 210, 504, 359, 419, 279, [], [], 0, 0)
+      show Knight MC at left
+      wb"You rush towards the Goblin. "
+      wb"The surprised Goblin swings his Sword after you. "
 
-     "Conjure a Spell":
-        image Mage MC = "gimar.png"
-        show Mage MC at left
-        wb"You instinctively try to cast a spell."
-        wb"slowly you see that a ball that looks to be made of fire forms in your hand."
-        wb"you can feel the heat that comes from the ball in your hand, it feels like its burning your skin."
-        wb"as the goblin run towards you, you fling the fireball at him."
-        wb"the impact of the fireball knocks the goblin back."
-        wb"he screams in pain as he burns to a crisp."
+      wb"But you react fast and evade it. "
+      wb"You hit the Sword out of his Hand and then kick him in the chest. "
+      wb"He Stumbles. Which gives you enough Time to get his Sword from the Ground."
+
+      wb"You attack him immediately and stab into his chest. "
+      wb"He cries in Agony while you press him to the ground. "
+      wb"It becomes quiet. You apply some more pressure just to be sure and then pull the
+      sword out "
+      wb"Blood flows down the sword and you shortly clean it on the Goblins leather clothes. "
+      wb"You look at the Sword, its not exactly new but still in good Condition."
+      wb"There is no scabbard but it should do just fine."
+      jump choosen
+    
+    label mage:
+      image Mage MC = "gimar.png"
+         #define magemc = ("Player:", 5, 416, 535, 359, 535, 239, 379, [fireball, flamethrower], [], 0, 0)
+      show Mage MC at left
+      wb"You instinctively try to cast a spell."
+      wb"slowly you see that a ball that looks to be made of fire forms in your hand."
+      wb"you can feel the heat that comes from the ball in your hand, it feels like its burning your skin."
+      wb"as the goblin run towards you, you fling the fireball at him."
+      wb"the impact of the fireball knocks the goblin back."
+      wb"he screams in pain as he burns to a crisp."
+      jump choosen
+
+    label dead:
+      hide screen countdown
+      wb"you died"
+
+      return
 
     # First Real Battle
-
-    call battle
+    label choosen:
+      call battle
 
     return

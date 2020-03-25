@@ -11,13 +11,13 @@ screen battle_screen:
                 xminimum 250 xmaximum 250
                 yminimum 75
                 vbox:
-                    text "[each_party_member[name]]" size 22 xalign 0.5
-                    null height 5
+                    text "[each_party_member.name]" size 22 xalign 0.5
+                    null height 2.5
                     hbox:
                         bar:
                             xmaximum 130
-                            value each_party_member["current_hp"]
-                            range each_party_member["max_hp"]
+                            value each_party_member.hp
+                            range each_party_member.maxhp
                             left_gutter 0
                             right_gutter 0
                             thumb None
@@ -25,7 +25,21 @@ screen battle_screen:
                             
                         null width 5
                         
-                        text "[each_party_member[current_hp]] / [each_party_member[max_hp]]" size 16
+                        text "[each_party_member.hp] / [each_party_member.maxhp]" size 16
+
+                    hbox:
+                        bar:
+                            xmaximum 130
+                            value each_party_member.mp
+                            range each_party_member.maxmp
+                            left_gutter 0
+                            right_gutter 0
+                            thumb None
+                            thumb_shadow None
+                            
+                        null width 5
+
+                        text "[each_party_member.mp] / [each_party_member.maxmp]" size 16
         hbox:
             frame:
                 size_group "party"
@@ -44,7 +58,7 @@ screen battle_screen:
         if enemies_list != []:
             for i, each_enemy_member in enumerate(enemies_list):
                 hbox:
-                    if players_turn and each_enemy_member["current_hp"] > 0:
+                    if players_turn and each_enemy_member.hp > 0:
                         textbutton "Attack ->" action Return(i) yminimum 75
                     else:
                         textbutton "Attack ->" action None yminimum 75
@@ -54,13 +68,13 @@ screen battle_screen:
                         xminimum 250 xmaximum 250
                         yminimum 75
                         vbox:
-                            text "[each_enemy_member[name]]" size 22 xalign 0.5
-                            null height 5
+                            text "[each_enemy_member.name]" size 22 xalign 0.5
+                            null height 2.5
                             hbox:
                                 bar:
                                     xmaximum 130
-                                    value each_enemy_member["current_hp"]
-                                    range each_enemy_member["max_hp"]
+                                    value each_enemy_member.hp
+                                    range each_enemy_member.maxhp
                                     left_gutter 0
                                     right_gutter 0
                                     thumb None
@@ -68,7 +82,7 @@ screen battle_screen:
                                     
                                 null width 5
                                 
-                                text "[each_enemy_member[current_hp]] / [each_enemy_member[max_hp]]" size 16
+                                text "[each_enemy_member.hp] / [each_enemy_member.maxhp]" size 16
             
             
 
@@ -78,7 +92,7 @@ init python:
         # if at least one of X party members is alive.
         #        
         for member in x:
-            if member["current_hp"] > 0:
+            if member.hp > 0:
                 return "ok"
                 
         return "lost"
@@ -91,7 +105,9 @@ label battle:
     # The "party_list" is a list of all allies each one of that
     # is described by a dictionary.
     #
-    $ party_list =[{"name":"Me", "max_hp":50, "current_hp":50, "min_damage":3, "max_damage":5}]
+    $ testmc = Char("Main Character", 5, 604, 210, 504, 359, 419, 279, [slash], [], 0, 0)
+    #$ party_list =[{"name":"MC", "maxhp":30, "hp":30, "maxmp":30, "mp":30, "min_damage":5, "max_damage":6}]
+    $ party_list =[testmc]
     $ potions_left = 10
     $ players_turn = False
     
@@ -112,11 +128,12 @@ label battle:
         "Who do you take with you?"
         
         "Friend 1":
-            $ party_list.append ( {"name":"Friend 1", "max_hp":30, "current_hp":30, "min_damage":5, "max_damage":6} )
-            
+            $ testf1 = Char("Testfriend", 5, 604, 210, 504, 359, 419, 279, [slash], [], 0, 0)
+            $ party_list.append (testf1)
         "Friend 2":
-            $ party_list.append ( {"name":"Friend 2", "max_hp":60, "current_hp":60, "min_damage":1, "max_damage":4} )
-            
+            $ testf2 = Char("Testfriend2", 5, 604, 210, 504, 359, 419, 279, [slash], [], 0, 0)
+            $ party_list.append (testf2)
+
         "Noone... :(":
             pass
             
@@ -124,14 +141,12 @@ label battle:
     #### Enemies party can be set manually or automatically like:
     #
     python:
-        for i in range ( 0, renpy.random.randint(1,4) ):
-            enemy_name = "Enemy %d" %i
-            enemy_max_hp = renpy.random.randint(10,20)
-            enemy_current_hp = enemy_max_hp
-            enemy_min_damage = renpy.random.randint(1,3)
-            enemy_max_damage = renpy.random.randint(4,6)
-            
-            enemies_list.append ( {"name":enemy_name, "max_hp":enemy_max_hp, "current_hp":enemy_current_hp, "min_damage":enemy_min_damage, "max_damage":enemy_max_damage} )
+        testenemy1 = Char("Goblin", 5, 274, 1, 185, 80, 152, 80, [], [], 0, 5)
+        testenemy2 = Char("Hobgoblin", 5, 354, 1, 284, 149, 209, 152, [], [], 0, 10)
+        testenemy3 = Char("Slime", 5, 304, 1, 80, 125, 180, 200, [], [], 0, 5)
+        enemies=[testenemy1,testenemy2,testenemy3]
+        for i in enemies:
+            enemies_list.append (i)
             
     
     "Let the battle begins!"
@@ -156,7 +171,7 @@ label battle:
             
             #### Current player will act only if he still alive.
             #
-            if current_player["current_hp"] > 0:
+            if current_player.hp > 0:
                 
                 #### Let's check if enemies party is still ok.
                 #
@@ -167,7 +182,7 @@ label battle:
                 #
                 $ players_turn = True
                 
-                battle_narrator"[current_player[name]], it's your turn now."
+                battle_narrator"[current_player.name], it's your turn now."
                 
                 #### Store the result of player's interaction.
                 #
@@ -178,13 +193,13 @@ label battle:
                 $ players_turn = False
                 
                 if res == "heal":
-                    $ current_player["current_hp"] = min( current_player["current_hp"]+5, current_player["max_hp"] )
+                    $ current_player.hp = min( current_player.hp +5, current_player.maxhp )
                     $ potions_left -= 1
                     "*Drink* 5hp restored"
                 
                 else:
-                    $ player_damage = renpy.random.randint( current_player["min_damage"], current_player["max_damage"] )
-                    $ enemies_list[res]["current_hp"] -= player_damage
+                    $ player_damage = current_player.generate_damage()
+                    $ enemies_list[res].hp -= player_damage
                     "Take this! (damage dealt - [player_damage]hp)"
                     
             
@@ -212,7 +227,7 @@ label battle:
             
             #### Current enemy will act only if he is still alive.
             #
-            if current_enemy["current_hp"] > 0:
+            if current_enemy.hp > 0:
                 
                 #### Let's check if player's party is still ok.
                 #
@@ -223,11 +238,11 @@ label battle:
                 #
                 $ party_member_to_attack = party_list[renpy.random.randint( 0, (len(party_list)-1) )]
                 
-                $ enemy_damage = renpy.random.randint( current_enemy["min_damage"], current_enemy["max_damage"] )
+                $ enemy_damage = current_enemy.generate_damage()
                 
-                $ party_member_to_attack["current_hp"] -= enemy_damage
+                $ party_member_to_attack.hp -= enemy_damage
                 
-                "Rrrrr! ([current_enemy[name]] dealt [enemy_damage]hp damage to [party_member_to_attack[name]])"
+                "Rrrrr! ([current_enemy.name] dealt [enemy_damage]hp damage to [party_member_to_attack.name])"
                 
             
             #### And the turn goes to the next party member.

@@ -1,26 +1,30 @@
 ﻿I'm sorry, but an uncaught exception occurred.
 
 While running game code:
-  File "game/script.rpy", line 43, in script call
-    call Battle
-  File "game/script.rpy", line 43, in script call
-    call Battle
-ScriptError: could not find label 'Battle'.
+  File "game/script.rpy", line 136, in script call
+    call battle
+  File "game/battle.rpy", line 243, in script
+    $ enemy_damage = renpy.random.randint( current_enemy["min_damage"], current_enemy["max_damage"] )
+  File "game/battle.rpy", line 243, in <module>
+    $ enemy_damage = renpy.random.randint( current_enemy["min_damage"], current_enemy["max_damage"] )
+TypeError: 'Char' object has no attribute '__getitem__'
 
 -- Full Traceback ------------------------------------------------------------
 
 Full traceback:
-  File "game/script.rpy", line 43, in script call
-    call Battle
-  File "D:\Renpy\renpy\ast.py", line 1436, in execute
-    rv = renpy.game.context().call(label, return_site=self.next.name)
-  File "game/script.rpy", line 43, in script call
-    call Battle
-  File "D:\Renpy\renpy\script.py", line 898, in lookup
-    raise ScriptError("could not find label '%s'." % str(original))
-ScriptError: could not find label 'Battle'.
+  File "game/script.rpy", line 136, in script call
+    call battle
+  File "game/battle.rpy", line 243, in script
+    $ enemy_damage = renpy.random.randint( current_enemy["min_damage"], current_enemy["max_damage"] )
+  File "D:\Renpy\renpy\ast.py", line 914, in execute
+    renpy.python.py_exec_bytecode(self.code.bytecode, self.hide, store=self.store)
+  File "D:\Renpy\renpy\python.py", line 2028, in py_exec_bytecode
+    exec bytecode in globals, locals
+  File "game/battle.rpy", line 243, in <module>
+    $ enemy_damage = renpy.random.randint( current_enemy["min_damage"], current_enemy["max_damage"] )
+TypeError: 'Char' object has no attribute '__getitem__'
 
 Windows-8-6.2.9200
 Ren'Py 7.3.5.606
 Nibelungen 1.0
-Wed Mar 18 09:27:59 2020
+Wed Mar 25 17:49:59 2020

@@ -16,17 +16,20 @@ label start:
 
     scene bg room
 
-    # This shows a character sprite. A placeholder is used, but you can
-    # replace it by adding a file named "eileen happy.png" to the images
-    # directory.
+    # This shows starting sprite
+    screen timer_test():
+    vbox:
+         textbutton "Yes." action Jump("yes")
+         textbutton "No." action Jump("no")
 
+    timer 3.0 action Jump("too_slow")
     show eileen happy
 
     # These display lines of dialogue.
 
-    e "You've created a new Ren'Py game."
+    e "Test."
 
-    e "Once you add a story, pictures, and music, you can release it to the world!"
+    e "Placeholder!"
 
     call battle
 

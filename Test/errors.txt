@@ -2,9 +2,17 @@
 errors listed below, and try again.
 
 
-File "game/script.rpy", line 31: expected 'label_name' not found.
-    call (label battle)
+File "game/script.rpy", line 20: screen expects a non-empty block.
+    screen timer_test():
+                        ^
+
+File "game/script.rpy", line 21: expected statement.
+    vbox:
         ^
 
+File "game/script.rpy", line 25: expected statement.
+    timer 3.0 action Jump("too_slow")
+           ^
+
 Ren'Py Version: Ren'Py 7.3.5.606
-Wed Mar 18 09:22:15 2020
+Wed Mar 25 11:45:57 2020

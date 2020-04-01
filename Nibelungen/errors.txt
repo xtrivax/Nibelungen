@@ -2,13 +2,9 @@
 errors listed below, and try again.
 
 
-File "game/script.rpy", line 55: menu statement expects a non-empty block.
-    menu:    
+File "game/script.rpy", line 138: expected statement.
+    set image MC = "[picture].png"
         ^
 
-File "game/script.rpy", line 56: expected statement.
-    timer 3.0 action Jump("dead")
-           ^
-
-Ren'Py Version: Ren'Py 6.99.14.1.3218
-Wed Mar 25 16:18:12 2020
+Ren'Py Version: Ren'Py 7.3.5.606
+Wed Apr 01 13:25:18 2020
